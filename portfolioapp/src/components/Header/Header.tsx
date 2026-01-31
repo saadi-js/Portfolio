@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
+import { SocialIcon } from '../TechIcon/TechIcon';
 
 const HeaderContainer = styled.header<{ $scrolled: boolean }>`
   background: ${props => props.$scrolled 
@@ -114,6 +116,44 @@ const GitHubLink = styled.a`
 
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     display: none;
+  }
+`;
+
+const HeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${props => props.theme.spacing.md};
+  
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    gap: ${props => props.theme.spacing.sm};
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: ${props => props.theme.spacing.sm};
+  
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    display: none;
+  }
+`;
+
+const SocialLink = styled.a`
+  color: white;
+  font-size: 1.2rem;
+  padding: ${props => props.theme.spacing.xs};
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
   }
 `;
 
@@ -255,14 +295,33 @@ const Header: React.FC = () => {
             ))}
           </NavList>
 
-          <GitHubLink 
-            href="https://github.com/saadi-js" 
-            target="_blank"
-            rel="noopener noreferrer"
-            title="GitHub Profile"
-          >
-            🐙
-          </GitHubLink>
+          <HeaderActions>
+            <SocialLinks>
+              <SocialLink 
+                href="https://github.com/saadi-js" 
+                target="_blank"
+                rel="noopener noreferrer"
+                title="GitHub Profile"
+              >
+                <SocialIcon platform="github" size={20} />
+              </SocialLink>
+              <SocialLink 
+                href="https://linkedin.com/in/yourprofile" 
+                target="_blank"
+                rel="noopener noreferrer"
+                title="LinkedIn Profile"
+              >
+                <SocialIcon platform="linkedin" size={20} />
+              </SocialLink>
+              <SocialLink 
+                href="mailto:your.email@example.com" 
+                title="Email"
+              >
+                <SocialIcon platform="email" size={20} />
+              </SocialLink>
+            </SocialLinks>
+            <DarkModeToggle />
+          </HeaderActions>
 
           <MobileMenuButton 
             onClick={toggleMobileMenu}

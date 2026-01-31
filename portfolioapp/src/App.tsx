@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import GlobalStyle from './styles/GlobalStyle';
-import theme from './styles/theme';
 import Header from './components/Header/Header';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Home from './pages/Home/Home';
@@ -11,9 +11,11 @@ import Projects from './pages/Projects/Projects';
 import Contact from './pages/Contact/Contact';
 import ProjectVisualization from './pages/ProjectVisualization/ProjectVisualization';
 
-function App() {
+const AppContent: React.FC = () => {
+  const { theme } = useTheme();
+
   return (
-    <ThemeProvider theme={theme}>
+    <StyledThemeProvider theme={theme}>
       <GlobalStyle />
       <ErrorBoundary>
         <Router>
@@ -31,6 +33,14 @@ function App() {
           </div>
         </Router>
       </ErrorBoundary>
+    </StyledThemeProvider>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
     </ThemeProvider>
   );
 }

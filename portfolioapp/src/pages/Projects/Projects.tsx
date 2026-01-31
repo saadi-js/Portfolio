@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import SEO from '../../components/SEO';
+import { TechIcon } from '../../components/TechIcon/TechIcon';
 import { 
   fadeInAnimation, 
   staggeredFadeIn,
@@ -14,13 +15,14 @@ const ProjectsContainer = styled.div`
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
+  background: ${props => props.theme.colors.background};
+  min-height: 100vh;
 `;
 
 const Title = styled.h1`
   font-size: 3rem;
   margin-bottom: ${props => props.theme.spacing.md};
   text-align: center;
-  color: ${props => props.theme.colors.dark};
   background: ${props => props.theme.colors.gradients.primary};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -54,7 +56,7 @@ const FilterContainer = styled.div`
 const FilterButton = styled.button<{ $active: boolean }>`
   padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.md};
   border: 2px solid ${props => props.$active ? props.theme.colors.primary : props.theme.colors.border};
-  background: ${props => props.$active ? props.theme.colors.primary : 'white'};
+  background: ${props => props.$active ? props.theme.colors.primary : props.theme.colors.surface};
   color: ${props => props.$active ? 'white' : props.theme.colors.textLight};
   border-radius: ${props => props.theme.borderRadius.lg};
   font-weight: 500;
@@ -75,7 +77,7 @@ const ProjectGrid = styled.div`
 `;
 
 const ProjectCard = styled.div`
-  background: white;
+  background: ${props => props.theme.colors.surface};
   border-radius: ${props => props.theme.borderRadius.xl};
   box-shadow: ${props => props.theme.shadows.medium};
   overflow: hidden;
@@ -116,13 +118,14 @@ const ProjectBadge = styled.div`
   position: absolute;
   top: ${props => props.theme.spacing.sm};
   right: ${props => props.theme.spacing.sm};
-  background: rgba(255, 255, 255, 0.9);
+  background: ${props => props.theme.colors.surface};
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
   color: ${props => props.theme.colors.primary};
   backdrop-filter: blur(10px);
+  border: 1px solid ${props => props.theme.colors.border};
 `;
 
 const ProjectContent = styled.div`
@@ -139,7 +142,7 @@ const ProjectHeader = styled.div`
 const ProjectTitle = styled.h3`
   font-size: 1.4rem;
   margin-bottom: ${props => props.theme.spacing.xs};
-  color: ${props => props.theme.colors.dark};
+  color: ${props => props.theme.colors.text};
   font-weight: 700;
 `;
 
@@ -187,13 +190,22 @@ const TechStack = styled.div`
   margin-bottom: ${props => props.theme.spacing.md};
 `;
 
-const TechTag = styled.span`
+const TechTag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: ${props => props.theme.colors.gradients.secondary};
   color: white;
-  padding: 4px 10px;
-  border-radius: 15px;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${props => props.theme.shadows.medium};
+  }
 `;
 
 const ProjectLinks = styled.div`
@@ -407,7 +419,10 @@ const Projects: React.FC = () => {
               
               <TechStack>
                 {project.techStack.map((tech, index) => (
-                  <TechTag key={index}>{tech}</TechTag>
+                  <TechTag key={index}>
+                    <TechIcon tech={tech} size={16} />
+                    <span>{tech}</span>
+                  </TechTag>
                 ))}
               </TechStack>
               

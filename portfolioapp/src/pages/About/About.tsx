@@ -13,6 +13,8 @@ const AboutContainer = styled.div`
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  background: ${props => props.theme.colors.background};
+  min-height: 100vh;
 `;
 
 const Title = styled.h1`
@@ -50,9 +52,9 @@ const ProfileImage = styled.div`
   width: 280px;
   height: 280px;
   border-radius: 50%;
-  background-image: url('/pfp.jpeg');
+  background-image: url('/assets/pfp.jpeg');
   background-position: center center;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   margin: 0 auto ${props => props.theme.spacing.lg};
   border: 5px solid ${props => props.theme.colors.primary};
@@ -60,6 +62,9 @@ const ProfileImage = styled.div`
   position: relative;
   overflow: hidden;
   ${hoverGlow};
+  
+  /* Ensure perfect circle aspect ratio */
+  aspect-ratio: 1 / 1;
   
   &::before {
     content: '';
@@ -71,6 +76,7 @@ const ProfileImage = styled.div`
     background: ${props => props.theme.colors.gradients.primary};
     opacity: 0;
     transition: opacity 0.3s ease;
+    border-radius: 50%;
   }
   
   &:hover::before {
@@ -90,7 +96,7 @@ const ProfileImage = styled.div`
   }
   
   /* Show fallback if background image fails to load */
-  @supports not (background-image: url('/pfp.jpeg')) {
+  @supports not (background-image: url('/assets/pfp.jpeg')) {
     &::after {
       opacity: 1;
     }
@@ -105,7 +111,7 @@ const QuickStats = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: ${props => props.theme.colors.light};
+  background: ${props => props.theme.colors.surface};
   padding: ${props => props.theme.spacing.sm};
   border-radius: ${props => props.theme.borderRadius.md};
   text-align: center;
@@ -171,7 +177,7 @@ const SkillsContainer = styled.div`
 `;
 
 const SkillCategory = styled.div`
-  background: white;
+  background: ${props => props.theme.colors.surface};
   padding: ${props => props.theme.spacing.lg};
   border-radius: ${props => props.theme.borderRadius.lg};
   box-shadow: ${props => props.theme.shadows.medium};

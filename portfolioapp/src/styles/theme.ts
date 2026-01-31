@@ -1,4 +1,4 @@
-const theme = {
+const lightTheme = {
   colors: {
     primary: '#007bff',
     secondary: '#6c757d',
@@ -9,8 +9,10 @@ const theme = {
     light: '#f8f9fa',
     dark: '#343a40',
     background: '#ffffff',
+    surface: '#ffffff',
     text: '#333333',
     textLight: '#666666',
+    textInverse: '#ffffff',
     border: '#e9ecef',
     gradients: {
       primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -44,4 +46,29 @@ const theme = {
   }
 };
 
-export default theme;
+const darkTheme = {
+  ...lightTheme,
+  colors: {
+    ...lightTheme.colors,
+    background: '#121212',
+    surface: '#1e1e1e',
+    text: '#ffffff',
+    textLight: '#b3b3b3',
+    textInverse: '#333333',
+    border: '#333333',
+    light: '#2a2a2a',
+    dark: '#0a0a0a',
+    gradients: {
+      primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      secondary: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    }
+  },
+  shadows: {
+    light: '0 2px 4px rgba(0, 0, 0, 0.3)',
+    medium: '0 4px 8px rgba(0, 0, 0, 0.4)',
+    heavy: '0 8px 16px rgba(0, 0, 0, 0.5)',
+  },
+};
+
+export { lightTheme, darkTheme };
+export default lightTheme;

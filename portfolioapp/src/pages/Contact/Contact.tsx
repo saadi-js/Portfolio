@@ -16,6 +16,8 @@ const ContactContainer = styled.div`
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  background: ${props => props.theme.colors.background};
+  min-height: 100vh;
 `;
 
 const Title = styled.h1`
@@ -56,7 +58,7 @@ const ContactContent = styled.div`
 `;
 
 const ContactForm = styled.form`
-  background: white;
+  background: ${props => props.theme.colors.surface};
   padding: ${props => props.theme.spacing.xxl};
   border-radius: ${props => props.theme.borderRadius.xl};
   box-shadow: ${props => props.theme.shadows.heavy};
@@ -95,7 +97,7 @@ const Label = styled.label`
   display: block;
   margin-bottom: ${props => props.theme.spacing.xs};
   font-weight: 600;
-  color: ${props => props.theme.colors.dark};
+  color: ${props => props.theme.colors.text};
   font-size: 0.95rem;
 `;
 
@@ -107,6 +109,8 @@ const Input = styled.input<{ hasError?: boolean }>`
   font-size: 1rem;
   transition: all 0.3s ease;
   font-family: inherit;
+  background: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
 
   &:focus {
     outline: none;
@@ -130,6 +134,8 @@ const TextArea = styled.textarea<{ hasError?: boolean }>`
   min-height: 120px;
   font-family: inherit;
   transition: all 0.3s ease;
+  background: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
 
   &:focus {
     outline: none;
@@ -184,7 +190,7 @@ const ContactInfo = styled.div`
 `;
 
 const InfoCard = styled.div`
-  background: white;
+  background: ${props => props.theme.colors.surface};
   padding: ${props => props.theme.spacing.xl};
   border-radius: ${props => props.theme.borderRadius.xl};
   box-shadow: ${props => props.theme.shadows.medium};

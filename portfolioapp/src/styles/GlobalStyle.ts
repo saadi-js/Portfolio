@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.6;
     color: ${props => props.theme.colors.text};
     background-color: ${props => props.theme.colors.background};
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   code {

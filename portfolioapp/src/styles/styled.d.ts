@@ -12,8 +12,10 @@ declare module 'styled-components' {
       light: string;
       dark: string;
       background: string;
+      surface: string;
       text: string;
       textLight: string;
+      textInverse: string;
       border: string;
       gradients: {
         primary: string;

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styled, { keyframes, css } from 'styled-components';
 import { fadeInAnimation, slideInFromBottomAnimation, hoverLift } from '../../styles/animations';
 import OptimizedImage from '../../components/OptimizedImage';
+import { TechIcon } from '../../components/TechIcon/TechIcon';
 
 const slideInFromLeft = keyframes`
   from {
@@ -48,10 +49,54 @@ const slideInAlternate = keyframes`
   }
 `;
 
+const modalFadeIn = keyframes`
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+`;
+
+const modalFadeOut = keyframes`
+  from {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+`;
+
+const modalScaleIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+`;
+
+const modalScaleOut = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+`;
+
 const VisualizationContainer = styled.div`
   min-height: 100vh;
   padding: 100px ${props => props.theme.spacing.lg} ${props => props.theme.spacing.xl};
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: ${props => props.theme.colors.background};
   position: relative;
 `;
 
@@ -134,14 +179,10 @@ const ImageGallery = styled.div`
   align-items: center;
   margin-bottom: ${props => props.theme.spacing.xxl};
   padding: ${props => props.theme.spacing.xxl};
-  background: linear-gradient(135deg, 
-    rgba(102, 126, 234, 0.05) 0%, 
-    rgba(118, 75, 162, 0.05) 50%,
-    rgba(240, 147, 251, 0.05) 100%
-  );
+  background: ${props => props.theme.colors.surface};
   border-radius: ${props => props.theme.borderRadius.xl};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${props => props.theme.colors.border};
   min-height: 800px;
   position: relative;
   overflow: visible;
@@ -187,6 +228,7 @@ const ImageWrapper = styled.div<{
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: ${props => props.theme.shadows.light};
   z-index: ${props => props.isHovered ? 1000 : 10 - props.index};
+  cursor: pointer;
   
   ${props => {
     const delay = props.index * 0.3;
@@ -302,15 +344,82 @@ const TechStack = styled.div`
   margin-bottom: ${props => props.theme.spacing.xl};
 `;
 
-const TechBadge = styled.span`
-  background: rgba(255, 255, 255, 0.9);
+const TechBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: ${props => props.theme.colors.surface};
   color: ${props => props.theme.colors.primary};
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 10px 16px;
+  border-radius: 25px;
   font-size: 0.9rem;
   font-weight: 600;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${props => props.theme.colors.border};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: ${props => props.theme.colors.light};
+  }
+`;
+
+const ModalOverlay = styled.div<{ isOpen: boolean; isClosing?: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: ${props => props.isOpen ? 'flex' : 'none'};
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: ${props => props.isClosing ? modalFadeOut : modalFadeIn} 0.3s ease-out;
+`;
+
+const ModalContent = styled.div<{ isClosing?: boolean }>`
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${props => props.isClosing ? modalScaleOut : modalScaleIn} 0.3s ease-out;
+`;
+
+const ModalImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: ${props => props.theme.borderRadius.lg};
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
 `;
 
 interface ProjectData {
@@ -375,6 +484,8 @@ const ProjectVisualization: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const [hoveredImage, setHoveredImage] = useState<number | null>(null);
+  const [modalImage, setModalImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isModalClosing, setIsModalClosing] = useState(false);
 
   const project = projectId ? projectData[projectId] : null;
 
@@ -383,6 +494,34 @@ const ProjectVisualization: React.FC = () => {
       navigate('/projects');
     }
   }, [project, navigate]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    if (modalImage) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'auto';
+    };
+  }, [modalImage]);
+
+  const closeModal = () => {
+    setIsModalClosing(true);
+    setTimeout(() => {
+      setModalImage(null);
+      setIsModalClosing(false);
+    }, 300);
+  };
 
   const getAnimationType = (index: number): 'left' | 'bottomRight' | 'bottomLeft' | 'alternate' => {
     if (index === 0) return 'left';
@@ -408,7 +547,10 @@ const ProjectVisualization: React.FC = () => {
 
       <TechStack>
         {project.techStack.map((tech, index) => (
-          <TechBadge key={index}>{tech}</TechBadge>
+          <TechBadge key={index}>
+            <TechIcon tech={tech} size={18} />
+            <span>{tech}</span>
+          </TechBadge>
         ))}
       </TechStack>
 
@@ -423,6 +565,7 @@ const ProjectVisualization: React.FC = () => {
               animationType={getAnimationType(index)}
               onMouseEnter={() => setHoveredImage(index)}
               onMouseLeave={() => setHoveredImage(null)}
+              onClick={() => setModalImage({ src: image, alt: `${project.title} Screenshot ${index + 1}` })}
             >
               <OptimizedImage
                 src={image} 
@@ -456,6 +599,26 @@ const ProjectVisualization: React.FC = () => {
           🚀 Live Demo
         </ActionButton>
       </ActionButtons>
+      
+      <ModalOverlay 
+        isOpen={modalImage !== null}
+        isClosing={isModalClosing}
+        onClick={closeModal}
+      >
+        <ModalContent isClosing={isModalClosing} onClick={(e) => e.stopPropagation()}>
+          {modalImage && (
+            <>
+              <ModalImage 
+                src={modalImage.src} 
+                alt={modalImage.alt}
+              />
+              <CloseButton onClick={closeModal}>
+                ✕
+              </CloseButton>
+            </>
+          )}
+        </ModalContent>
+      </ModalOverlay>
     </VisualizationContainer>
   );
 };
