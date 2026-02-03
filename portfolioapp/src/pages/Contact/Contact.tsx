@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import SEO from '../../components/SEO';
+import { SocialIcon } from '../../components/TechIcon/TechIcon';
 import Toast from '../../components/Toast';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { 
@@ -268,24 +269,7 @@ const QuickContactEmail = styled.div`
   }
 `;
 
-const QuickContactButton = styled.a`
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.lg};
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: ${props => props.theme.borderRadius.lg};
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
-  }
-`;
 
 interface FormData {
   name: string;
@@ -476,10 +460,10 @@ const Contact: React.FC = () => {
             </InfoText>
             <SocialLinks>
               <SocialLink href="https://github.com/saadi-js" target="_blank">
-                🐙 GitHub
+                <SocialIcon platform="github" size={18} /> GitHub
               </SocialLink>
               <SocialLink href="https://www.linkedin.com/in/saad-chattha-568901263/" target="_blank">
-                💼 LinkedIn
+                <SocialIcon platform="linkedin" size={18} /> LinkedIn
               </SocialLink>
               <SocialLink href="mailto:saadchattha77@gmail.com">
                 📧 Email

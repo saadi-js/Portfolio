@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import SEO from '../../components/SEO';
-import { TechIcon } from '../../components/TechIcon/TechIcon';
+import { TechIcon, SocialIcon } from '../../components/TechIcon/TechIcon';
 import { 
   fadeInAnimation, 
   staggeredFadeIn,
@@ -17,6 +17,16 @@ const ProjectsContainer = styled.div`
   margin-right: auto;
   background: ${props => props.theme.colors.background};
   min-height: 100vh;
+  
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    padding: ${props => props.theme.spacing.xl} ${props => props.theme.spacing.md};
+    margin-top: 70px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: ${props => props.theme.spacing.lg} ${props => props.theme.spacing.sm};
+    margin-top: 60px;
+  }
 `;
 
 const Title = styled.h1`
@@ -29,6 +39,14 @@ const Title = styled.h1`
   background-clip: text;
   opacity: 0;
   ${fadeInAnimation};
+  
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    font-size: 2.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -51,6 +69,11 @@ const FilterContainer = styled.div`
   flex-wrap: wrap;
   opacity: 0;
   ${staggeredFadeIn(0.6)};
+  
+  @media (max-width: 480px) {
+    gap: ${props => props.theme.spacing.xs};
+    margin-bottom: ${props => props.theme.spacing.lg};
+  }
 `;
 
 const FilterButton = styled.button<{ $active: boolean }>`
@@ -74,6 +97,16 @@ const ProjectGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   gap: ${props => props.theme.spacing.xl};
+  
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    grid-template-columns: 1fr;
+    gap: ${props => props.theme.spacing.lg};
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: ${props => props.theme.spacing.md};
+  }
 `;
 
 const ProjectCard = styled.div`
@@ -414,7 +447,7 @@ const Projects: React.FC = () => {
               <ProjectLinks>
                 {project.githubUrl && (
                   <ProjectLink href={project.githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} source code on GitHub`}>
-                    🐙 Code
+                    <SocialIcon platform="github" size={16} /> Code
                   </ProjectLink>
                 )}
                 {project.visualizationUrl && (

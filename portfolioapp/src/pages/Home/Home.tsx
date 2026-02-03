@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import SEO from '../../components/SEO';
+import { SocialIcon } from '../../components/TechIcon/TechIcon';
 import { 
   typewriter,
   gradientShift,
@@ -15,26 +16,12 @@ const HomeContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${props => props.theme.colors.gradients.hero};
-  background-size: 400% 400%;
-  animation: ${gradientShift} 20s ease infinite;
-  color: white;
+  background: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
   text-align: center;
   padding: ${props => props.theme.spacing.lg};
   position: relative;
   overflow: hidden;
-  
-  /* Subtle overlay for better text readability */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.1);
-    z-index: 1;
-  }
 `;
 
 const BackgroundElements = styled.div`
@@ -257,7 +244,7 @@ const Home: React.FC = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [roles.length]);
 
   const scrollToProjects = () => {
     navigate('/projects');
@@ -304,10 +291,10 @@ const Home: React.FC = () => {
         <aside>
           <SocialLinks aria-label="Social media links">
             <SocialLink href="https://github.com/saadi-js" target="_blank" rel="noopener noreferrer" title="GitHub Profile">
-              🐙
+              <SocialIcon platform="github" size={24} />
             </SocialLink>
             <SocialLink href="https://www.linkedin.com/in/saad-chattha-568901263/" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile">
-              💼
+              <SocialIcon platform="linkedin" size={24} />
             </SocialLink>
           </SocialLinks>
           

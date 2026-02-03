@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconType } from 'react-icons';
 import { 
   FaReact, 
   FaNodeJs, 
@@ -110,7 +111,7 @@ const techIconMap: Record<string, any> = {
   'OpenAI Embeddings': SiOpenai
 };
 
-const socialIconMap = {
+const socialIconMap: Record<string, IconType> = {
   'github': FaGithub,
   'linkedin': FaLinkedin,
   'email': FaEnvelope,
@@ -133,12 +134,15 @@ export const SocialIcon: React.FC<{ platform: string; size?: number; className?:
   size = 24, 
   className 
 }) => {
-  let icon = platform;
-  if (platform.toLowerCase() === 'github') icon = '🐙';
-  if (platform.toLowerCase() === 'linkedin') icon = '💼';
-  if (platform.toLowerCase() === 'email' || platform.toLowerCase() === 'gmail') icon = '✉️';
+  const platformKey = platform.toLowerCase();
+  const IconComponent = socialIconMap[platformKey] as React.ComponentType<{ size?: number; className?: string }>;
   
-  return <span className={className} style={{ fontSize: `${size}px` }}>{icon}</span>;
+  if (IconComponent) {
+    return <IconComponent size={size} className={className} />;
+  }
+  
+  // Fallback for unknown platforms
+  return <span className={className} style={{ fontSize: `${size}px` }}>⚡</span>;
 };
 
 export const getTechIcon = (tech: string) => {

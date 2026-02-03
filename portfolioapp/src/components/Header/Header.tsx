@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { FaHome, FaUser, FaFolderOpen, FaEnvelope } from 'react-icons/fa';
 import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
 import { SocialIcon } from '../TechIcon/TechIcon';
 
 const HeaderContainer = styled.header<{ $scrolled: boolean }>`
   background: ${props => props.$scrolled 
-    ? 'rgba(102, 126, 234, 0.95)' 
+    ? 'rgba(255, 255, 255, 0.25)' 
     : props.theme.colors.gradients.primary
   };
   padding: ${props => props.theme.spacing.sm} 0;
@@ -16,11 +17,16 @@ const HeaderContainer = styled.header<{ $scrolled: boolean }>`
   right: 0;
   z-index: 1000;
   box-shadow: ${props => props.$scrolled 
-    ? props.theme.shadows.heavy 
+    ? '0 8px 32px rgba(0, 0, 0, 0.1)' 
     : props.theme.shadows.medium
   };
+  border-bottom: ${props => props.$scrolled 
+    ? '1px solid rgba(255, 255, 255, 0.3)' 
+    : 'none'
+  };
   transition: all 0.3s ease;
-  backdrop-filter: ${props => props.$scrolled ? 'blur(10px)' : 'none'};
+  backdrop-filter: ${props => props.$scrolled ? 'blur(20px) saturate(180%)' : 'none'};
+  -webkit-backdrop-filter: ${props => props.$scrolled ? 'blur(20px) saturate(180%)' : 'none'};
 `;
 
 const Nav = styled.nav`
@@ -41,10 +47,13 @@ const LogoContainer = styled(Link)`
   position: relative;
 `;
 
-const Logo = styled.div`
+const Logo = styled.div<{ $scrolled: boolean }>`
   font-size: 1.8rem;
   font-weight: 800;
-  color: white;
+  color: ${props => props.$scrolled 
+    ? props.theme.colors.text 
+    : 'white'
+  };
   
   &:hover {
     opacity: 0.9;
@@ -72,20 +81,33 @@ const NavItem = styled.li`
   position: relative;
 `;
 
-const NavLink = styled(Link)<{ $isActive: boolean }>`
-  color: white;
+const NavLink = styled(Link)<{ $isActive: boolean; $scrolled: boolean }>`
+  color: ${props => props.$scrolled 
+    ? props.theme.colors.text 
+    : 'white'
+  };
   text-decoration: none;
   padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
   border-radius: ${props => props.theme.borderRadius.lg};
   transition: all 0.3s ease;
   font-weight: ${props => props.$isActive ? '700' : '500'};
-  background-color: ${props => props.$isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
+  background-color: ${props => {
+    if (props.$isActive) {
+      return props.$scrolled 
+        ? 'rgba(0, 0, 0, 0.1)' 
+        : 'rgba(255, 255, 255, 0.2)';
+    }
+    return 'transparent';
+  }};
   display: block;
   position: relative;
   z-index: 1001;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: ${props => props.$scrolled 
+      ? 'rgba(0, 0, 0, 0.08)' 
+      : 'rgba(255, 255, 255, 0.15)'
+    };
     transform: translateY(-2px);
   }
 
@@ -94,30 +116,7 @@ const NavLink = styled(Link)<{ $isActive: boolean }>`
   }
 `;
 
-const GitHubLink = styled.a`
-  color: white;
-  font-size: 1.4rem;
-  padding: ${props => props.theme.spacing.xs};
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  text-decoration: none;
-  z-index: 1001;
-  position: relative;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    display: none;
-  }
-`;
 
 const HeaderActions = styled.div`
   display: flex;
@@ -125,21 +124,36 @@ const HeaderActions = styled.div`
   gap: ${props => props.theme.spacing.md};
   
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    gap: ${props => props.theme.spacing.sm};
+    gap: ${props => props.theme.spacing.xs};
   }
 `;
 
 const SocialLinks = styled.div`
   display: flex;
   gap: ${props => props.theme.spacing.sm};
+`;
+
+const MobileDarkModeToggle = styled.div`
+  display: none;
+  
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    display: block;
+  }
+`;
+
+const DesktopDarkModeToggle = styled.div`
+  display: block;
   
   @media (max-width: ${props => props.theme.breakpoints.tablet}) {
     display: none;
   }
 `;
 
-const SocialLink = styled.a`
-  color: white;
+const SocialLink = styled.a<{ $scrolled: boolean }>`
+  color: ${props => props.$scrolled 
+    ? props.theme.colors.text 
+    : 'white'
+  };
   font-size: 1.2rem;
   padding: ${props => props.theme.spacing.xs};
   border-radius: 50%;
@@ -152,16 +166,22 @@ const SocialLink = styled.a`
   text-decoration: none;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${props => props.$scrolled 
+      ? 'rgba(0, 0, 0, 0.1)' 
+      : 'rgba(255, 255, 255, 0.2)'
+    };
     transform: scale(1.1);
   }
 `;
 
-const MobileMenuButton = styled.button`
+const MobileMenuButton = styled.button<{ $scrolled: boolean }>`
   display: none;
   background: none;
   border: none;
-  color: white;
+  color: ${props => props.$scrolled 
+    ? props.theme.colors.text 
+    : 'white'
+  };
   font-size: 1.5rem;
   cursor: pointer;
   padding: ${props => props.theme.spacing.xs};
@@ -214,7 +234,10 @@ const MobileNavLink = styled(Link)<{ $isActive: boolean }>`
   background-color: ${props => props.$isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
   text-align: center;
   transition: all 0.3s ease;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${props => props.theme.spacing.xs};
   width: 100%;
 
   &:hover {
@@ -222,19 +245,31 @@ const MobileNavLink = styled(Link)<{ $isActive: boolean }>`
   }
 `;
 
-const MobileGitHubLink = styled.a`
+const MobileSocialLink = styled.a`
   color: white;
   text-decoration: none;
   padding: ${props => props.theme.spacing.md};
   border-radius: ${props => props.theme.borderRadius.md};
   text-align: center;
   transition: all 0.3s ease;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${props => props.theme.spacing.xs};
   width: 100%;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.15);
   }
+`;
+
+const MobileDarkModeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${props => props.theme.spacing.md};
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: ${props => props.theme.spacing.md};
 `;
 
 const Header: React.FC = () => {
@@ -277,8 +312,7 @@ const Header: React.FC = () => {
       <HeaderContainer $scrolled={scrolled}>
         <Nav>
           <LogoContainer to="/" onClick={closeMobileMenu} aria-label="Saadi - Home">
-            <LogoIcon>⚡</LogoIcon>
-            <Logo>Saadi</Logo>
+            <Logo $scrolled={scrolled}>Saadi</Logo>
           </LogoContainer>
           
           <NavList role="navigation" aria-label="Main navigation">
@@ -287,6 +321,7 @@ const Header: React.FC = () => {
                 <NavLink 
                   to={item.path} 
                   $isActive={location.pathname === item.path}
+                  $scrolled={scrolled}
                   aria-current={location.pathname === item.path ? 'page' : undefined}
                 >
                   {item.label}
@@ -302,6 +337,7 @@ const Header: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="GitHub Profile"
+                $scrolled={scrolled}
               >
                 <SocialIcon platform="github" size={20} />
               </SocialLink>
@@ -310,17 +346,21 @@ const Header: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="LinkedIn Profile"
+                $scrolled={scrolled}
               >
                 <SocialIcon platform="linkedin" size={20} />
               </SocialLink>
             </SocialLinks>
-            <DarkModeToggle />
+            <DesktopDarkModeToggle>
+              <DarkModeToggle />
+            </DesktopDarkModeToggle>
           </HeaderActions>
 
           <MobileMenuButton 
             onClick={toggleMobileMenu}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
+            $scrolled={scrolled}
           >
             {mobileMenuOpen ? '✕' : '☰'}
           </MobileMenuButton>
@@ -329,27 +369,50 @@ const Header: React.FC = () => {
 
       <MobileMenu $isOpen={mobileMenuOpen} role="navigation" aria-label="Mobile navigation">
         <MobileNavList>
-          {navItems.map(item => (
-            <MobileNavItem key={item.path}>
-              <MobileNavLink 
-                to={item.path} 
-                $isActive={location.pathname === item.path}
-                onClick={closeMobileMenu}
-                aria-current={location.pathname === item.path ? 'page' : undefined}
-              >
-                {item.label}
-              </MobileNavLink>
-            </MobileNavItem>
-          ))}
           <MobileNavItem>
-            <MobileGitHubLink 
-              href="https://github.com/saadi-js" 
-              target="_blank"
-              rel="noopener noreferrer"
+            <MobileNavLink 
+              to="/" 
+              $isActive={location.pathname === '/'}
               onClick={closeMobileMenu}
+              aria-current={location.pathname === '/' ? 'page' : undefined}
             >
-              🐙 GitHub
-            </MobileGitHubLink>
+              {React.createElement(FaHome as React.ComponentType<{size?: number}>, { size: 18 })} Home
+            </MobileNavLink>
+          </MobileNavItem>
+          <MobileNavItem>
+            <MobileNavLink 
+              to="/about" 
+              $isActive={location.pathname === '/about'}
+              onClick={closeMobileMenu}
+              aria-current={location.pathname === '/about' ? 'page' : undefined}
+            >
+              {React.createElement(FaUser as React.ComponentType<{size?: number}>, { size: 18 })} About
+            </MobileNavLink>
+          </MobileNavItem>
+          <MobileNavItem>
+            <MobileNavLink 
+              to="/projects" 
+              $isActive={location.pathname === '/projects'}
+              onClick={closeMobileMenu}
+              aria-current={location.pathname === '/projects' ? 'page' : undefined}
+            >
+              {React.createElement(FaFolderOpen as React.ComponentType<{size?: number}>, { size: 18 })} Projects
+            </MobileNavLink>
+          </MobileNavItem>
+          <MobileNavItem>
+            <MobileNavLink 
+              to="/contact" 
+              $isActive={location.pathname === '/contact'}
+              onClick={closeMobileMenu}
+              aria-current={location.pathname === '/contact' ? 'page' : undefined}
+            >
+              {React.createElement(FaEnvelope as React.ComponentType<{size?: number}>, { size: 18 })} Contact
+            </MobileNavLink>
+          </MobileNavItem>
+          <MobileNavItem>
+            <MobileDarkModeContainer>
+              <DarkModeToggle />
+            </MobileDarkModeContainer>
           </MobileNavItem>
         </MobileNavList>
       </MobileMenu>
